@@ -11,7 +11,7 @@ st.set_page_config(
      initial_sidebar_state="expanded",
  )
 
-@st.cache
+#@st.cache
 def load_data():
     df = pd.read_pickle('Adanimals_df').T
     monthly_care_arr = np.load('NFT_staking_CARE_arr.npy')
