@@ -13,7 +13,7 @@ st.set_page_config(
 
 #@st.cache
 def load_data():
-    df = pd.read_pickle('Adanimals_df').T
+    df = pd.read_pickle('Adanimals_df')
     monthly_care_arr = np.load('NFT_staking_CARE_arr.npy')
     NFT_monthly_arr= np.load('NFT_monthly_arr.npy')
     return df, monthly_care_arr, NFT_monthly_arr
@@ -30,7 +30,7 @@ def update_counter():
     st.session_state.CARE_increment = st.session_state.CARE_increment
 
 df, monthly_CARE_arr_24_8000, NFT_monthly_arr = load_data()
-df_T = df.T
+#df = df
 
 
 
@@ -50,19 +50,19 @@ st.write('The table displays simulation results of 8000 randomly generated Adani
 
 
 
-df_T['monthly $CARE'] = (df_T['Weight (%)']*st.session_state.CARE_increment/100).astype(int)
+df['monthly $CARE'] = (df['Weight (%)']*st.session_state.CARE_increment/100).astype(int)
 
 
-st.dataframe(df_T)
+st.dataframe(df.astype('object'))
 
 
 st.subheader('Statistics')
-st.dataframe(df_T.describe(include= 'all'))
+st.dataframe(df.describe(include= 'all'))
 
 
 st.subheader('Rarity per NFT')
 
-hist, bin_edges = np.histogram(df_T['rarity'].to_numpy().astype(int), bins=60)
+hist, bin_edges = np.histogram(df['rarity'].to_numpy().astype(int), bins=60)
 
 hist_df = pd.DataFrame({
     'Rarity Score of NFT': bin_edges[:-1],
@@ -114,7 +114,7 @@ st.subheader('Earnings per NFT')
 
 
 
-hist_, bin_edges_ = np.histogram(df_T['monthly $CARE'].to_numpy().astype(int), bins=200)
+hist_, bin_edges_ = np.histogram(df['monthly $CARE'].to_numpy().astype(int), bins=200)
 
 hist_df2 = pd.DataFrame({
     'Earned $CARE per month': bin_edges_[:-1],
