@@ -37,7 +37,7 @@ df_T = df.T
 with st.form(key='my_form'):
     default_val_CARE = int(NFT_monthly_arr[0])
 
-    st.number_input('Total emitted CARE per month for NFT staking', value=default_val_CARE, step=1, key='CARE_increment')
+    st.number_input('Total emitted $CARE per month for NFT staking', value=default_val_CARE, step=1, key='CARE_increment')
     submit = st.form_submit_button(label='Update', on_click=update_counter)
 
 st.write('Total $CARE tokens emitted per month for NFT staking = ', st.session_state.CARE_increment)
@@ -46,7 +46,7 @@ st.write('Total $CARE tokens emitted per month for NFT staking = ', st.session_s
 
 st.title('Adanimals NFTs Simulation Table')
 
-st.write('The table displays simulation results of 8000 randomly generated Adanimals. The CARE tokens earned per NFT depend on its Total Score. The higher its score, the higher its weight and thus its eligibility for token rewards. Ice, Earth and Air Elements are proposed names for stats instead of strength, agility, intelligence. The total score is the sum of these stats. Luck, spirit and wits do not yet have any significance, but they might have influence on future quest outcomes and other gameplay mechanics. You can adjust the total amount of $CARE above to see the change in the table.' )
+st.write('The table displays simulation results of 8000 randomly generated Adanimals. The \$CARE tokens earned per NFT depend on its Total Score. The higher its score, the higher its weight and thus its eligibility for token rewards. Ice, Earth and Air Elements are proposed names for stats instead of strength, agility, intelligence. The total score is the sum of these stats. Luck, spirit and wits do not yet have any significance, but they might have influence on future quest outcomes and other gameplay mechanics. You can adjust the total amount of $CARE above to see the change in the table.' )
 
 
 
@@ -54,6 +54,10 @@ df_T['monthly $CARE'] = (df_T['Weight (%)']*st.session_state.CARE_increment/100)
 
 
 st.dataframe(df_T)
+
+
+st.subheader('Statistics')
+st.dataframe(df_T.describe(include= 'all'))
 
 
 st.subheader('Rarity per NFT')
@@ -117,14 +121,14 @@ hist_df2 = pd.DataFrame({
     'Number of NFTs': hist_
 })
 
-'''
-c2 = alt.Chart(hist_df2).mark_bar().encode(
-    x='Earned $CARE per month',
-    y='Number of NFTs'
-)
-#st.bar_chart(hist_values[0])
-st.altair_chart(c2, use_container_width=True)
-'''
+if False:
+    c2 = alt.Chart(hist_df2).mark_bar().encode(
+        x='Earned $CARE per month',
+        y='Number of NFTs'
+    )
+    #st.bar_chart(hist_values[0])
+    st.altair_chart(c2, use_container_width=True)
+
 
 
 c3 = alt.Chart(hist_df2).mark_circle(size=80).encode(
