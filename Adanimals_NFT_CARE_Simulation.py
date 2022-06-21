@@ -46,6 +46,7 @@ st.write('Total $CARE tokens emitted per month for NFT staking = ', st.session_s
 
 st.title('Adanimals NFTs Simulation Table')
 
+st.write('The table displays simulation results of 8000 randomly generated Adanimals. The $CARE tokens earned per NFT depend on its Total Score. The higher its score, the higher its weight and thus its eligibility for token rewards. Ice, Earth and Air Elements are proposed names for stats instead of strength, agility, intelligence. The total score is the sum of these stats. Luck, bravery and Wits' )
 
 
 
@@ -57,7 +58,7 @@ st.dataframe(df_T)
 
 st.subheader('Rarity per NFT')
 
-hist, bin_edges = np.histogram(df_T['rarity'].to_numpy().astype(int), bins=50)
+hist, bin_edges = np.histogram(df_T['rarity'].to_numpy().astype(int), bins=60)
 
 hist_df = pd.DataFrame({
     'Rarity Score of NFT': bin_edges[:-1],
