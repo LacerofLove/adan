@@ -57,7 +57,7 @@ st.dataframe(df_T)
 
 st.subheader('Rarity per NFT')
 
-hist, bin_edges = np.histogram(df_T['rarity'].to_numpy().astype(int), bins=200)
+hist, bin_edges = np.histogram(df_T['rarity'].to_numpy().astype(int), bins=50)
 
 hist_df = pd.DataFrame({
     'Rarity Score of NFT': bin_edges[:-1],
@@ -78,7 +78,7 @@ if False:
     st.subheader('Total Scores per NFT')
 
 
-    hist, bin_edges = np.histogram(df_T['total score'].to_numpy().astype(int), bins=200)
+    hist, bin_edges = np.histogram(df_T['total score'].to_numpy().astype(int), bins=100)
 
     hist_df = pd.DataFrame({
         'Total Score of NFT': bin_edges[:-1],
