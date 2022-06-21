@@ -1,13 +1,17 @@
-"""
-# My first app
-Here's our first attempt at using data to create a table:
-"""
-
 import streamlit as st
 import pandas as pd
 import numpy as np
+import altair as alt
 
-#@st.cache
+
+st.set_page_config(
+     page_title="Adanimals NFTs",
+     page_icon="🧊",
+     layout="wide",
+     initial_sidebar_state="expanded",
+ )
+
+@st.cache
 def load_data():
     df = pd.read_pickle('Adanimals_df').T
     monthly_care_arr = np.load('NFT_staking_CARE_arr.npy')
@@ -17,35 +21,30 @@ def load_data():
 
 import datetime
 
-st.title('Adjust $CARE per Month')
+st.title('Adjust $CARE Emissions per Month')
 if 'count' not in st.session_state:
     st.session_state.count = 0
     #st.session_state.last_updated = datetime.time(0,0)
 
 def update_counter():
     st.session_state.CARE_increment = st.session_state.CARE_increment
-    #st.session_state.month_increment = st.session_state.month_increment
-
-    #st.session_state.last_updated = st.session_state.update_time
 
 df, monthly_CARE_arr_24_8000, NFT_monthly_arr = load_data()
 df_T = df.T
 
 
-default_val_CARE = int(NFT_monthly_arr[0])
 
 with st.form(key='my_form'):
-    #st.time_input(label='Enter the time', value=datetime.datetime.now().time(), key='update_time')
-    #st.number_input('Month of staking (1-24)', value=0, step=1, key='month_increment')
+    default_val_CARE = int(NFT_monthly_arr[0])
+
     st.number_input('CARE per month for NFT staking', value=default_val_CARE, step=1, key='CARE_increment')
     submit = st.form_submit_button(label='Update', on_click=update_counter)
 
-#st.write('Current Month = ', st.session_state.month_increment)
-st.write('Total $CARE tokens emitted per month = ', st.session_state.CARE_increment)
-#st.write('Last Updated = ', st.session_state.last_updated)
+st.write('Total $CARE tokens emitted per month for NFT staking = ', st.session_state.CARE_increment)
 
 
-st.title('Adanimals NFT Simulator')
+
+st.title('Adanimals NFTs Simulation Table')
 
 
 
@@ -53,5 +52,85 @@ st.title('Adanimals NFT Simulator')
 df_T['monthly $CARE'] = (df_T['Weight (%)']*st.session_state.CARE_increment/100).astype(int)
 
 
-df_T
+st.dataframe(df_T)
 
+
+st.subheader('Rarity per NFT')
+
+hist, bin_edges = np.histogram(df_T['rarity'].to_numpy().astype(int), bins=200)
+
+hist_df = pd.DataFrame({
+    'Rarity Score of NFT': bin_edges[:-1],
+    'Number of NFTs': hist
+})
+
+c = alt.Chart(hist_df).mark_circle(size=80).encode(
+    x='Rarity Score of NFT',
+    y='Number of NFTs',
+    color='Rarity Score of NFT',
+    tooltip=['Rarity Score of NFT', 'Number of NFTs']
+).interactive()
+
+st.altair_chart(c, use_container_width=True)
+
+
+if False:
+    st.subheader('Total Scores per NFT')
+
+
+    hist, bin_edges = np.histogram(df_T['total score'].to_numpy().astype(int), bins=200)
+
+    hist_df = pd.DataFrame({
+        'Total Score of NFT': bin_edges[:-1],
+        'Number of NFTs': hist
+    })
+
+
+    '''
+    c = alt.Chart(hist_df).mark_bar().encode(
+        x='Total Score of NFT',
+        y='Number of NFTs'
+    )
+    #st.bar_chart(hist_values[0])
+    st.altair_chart(c, use_container_width=True)
+    '''
+
+    c = alt.Chart(hist_df).mark_circle(size=80).encode(
+        x='Total Score of NFT',
+        y='Number of NFTs',
+        color='Total Score of NFT',
+        tooltip=['Total Score of NFT', 'Number of NFTs']
+    ).interactive()
+
+    st.altair_chart(c, use_container_width=True)
+
+
+st.subheader('Earnings per NFT')
+
+
+
+hist_, bin_edges_ = np.histogram(df_T['monthly $CARE'].to_numpy().astype(int), bins=200)
+
+hist_df2 = pd.DataFrame({
+    'Earned $CARE per month': bin_edges_[:-1],
+    'Number of NFTs': hist_
+})
+
+'''
+c2 = alt.Chart(hist_df2).mark_bar().encode(
+    x='Earned $CARE per month',
+    y='Number of NFTs'
+)
+#st.bar_chart(hist_values[0])
+st.altair_chart(c2, use_container_width=True)
+'''
+
+
+c3 = alt.Chart(hist_df2).mark_circle(size=80).encode(
+    x='Earned $CARE per month',
+    y='Number of NFTs',
+    color='Earned $CARE per month',
+    tooltip=['Earned $CARE per month', 'Number of NFTs']
+).interactive()
+
+st.altair_chart(c3, use_container_width=True)
